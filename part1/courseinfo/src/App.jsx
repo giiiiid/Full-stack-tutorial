@@ -1,3 +1,6 @@
+import { useState } from "react"
+
+
 const Header = (props) => {
   return(
     <h1>{props.course}</h1>
@@ -44,7 +47,54 @@ const Total = (props) => {
 }
 
 
-const App = () => {
+const Hello = ({name, age}) => {
+  // const name = props.name
+  // const age = props.age
+  // const {name, age} = props
+
+  const bornYear = () => new Date().getFullYear() - age
+
+  return(
+    <>
+      <p>Hello {name}, you are {age} years old </p>
+      <p>You were probably born in {bornYear()} </p>
+    </>
+  )
+}
+
+const Counting = () => {
+  const [counter, setCounter] = useState(0)
+
+  // setTimeout(
+  //   () => setCounter(counter + 1),
+  //   1000
+  // )
+  
+  // console.log("rendering", counter) 
+  const increaseByOne = () => setCounter(counter + 1)
+  const setToZero = () => setCounter(0)
+
+  return (
+    <>
+      <p>Time is running {counter} </p>
+      <button onClick={() => setCounter(counter + 1)}>
+        plus
+      </button>
+      <button onClick={increaseByOne}>increase</button>
+      <button onClick={setToZero}>zero</button>
+    </>
+  )
+}
+
+
+const App = (props) => {
+
+  // const [ counter, setCounter ] = useState(0)
+
+  // setTimeout(
+  //   () => setCounter(counter + 1),
+  //   1000
+  // )
 
   const course = "Half Stack application development"
   const part1 = "Fundamentals of React"
@@ -54,12 +104,16 @@ const App = () => {
   const part3 = "State of a component"
   const exercises3 = 14
 
+  // const {counter} = props
 
   return(
     <div>
       <Header course={course}/>
       <Content />
       <Total total={exercises1 + exercises2 + exercises3}/>
+      <Hello name="Gideon" age="21" year="2002" />
+      <Counting />
+      
     </div>
   )
 }
