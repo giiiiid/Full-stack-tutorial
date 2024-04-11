@@ -1,185 +1,157 @@
-import { useState } from "react"
+import {useState} from 'react'
 
 
-const Header = (props) => {
-  return(
-    <h1>{props.course}</h1>
-  )
-}
-
-
-const Part = (props) => {
-  return(
-    <>
-      <p>{props.part1} {props.exercises1}</p>
-      <p>{props.part2} {props.exercises2}</p>
-      <p>{props.part3} {props.exercises3}</p>
-    </>
-  )
-}
-
-
-const Content = () => {
-
-  const part1 = "Fundamentals of React"
-  const exercises1 = 10
-  const part2 = "Using props to pass data"
-  const exercises2 = 7
-  const part3 = "State of a component"
-  const exercises3 = 14
-
-  return(
-    <>
-    <Part part1={part1} exercises1={exercises1}/>
-    <Part part1={part2} exercises1={exercises2}/>
-    <Part part1={part3} exercises1={exercises3}/>
-    </>
-  )
-}
-
-
-const Total = (props) => {
-  return(
-    <>
-    <p>Number of exercises {props.total}</p>
-    </>
-  )
-}
-
-
-const Hello = ({name, age}) => {
-  // const name = props.name
-  // const age = props.age
-  // const {name, age} = props
-
-  const bornYear = () => new Date().getFullYear() - age
-
-  return(
-    <>
-      <p>Hello {name}, you are {age} years old </p>
-      <p>You were probably born in {bornYear()} </p>
-    </>
-  )
-}
-
-const Button = ({onSmash, text}) => {
-  return (
-    <button onClick = {onSmash}>
-      {text}
-    </button>
-  )
-}
-
-const Counting = () => {
-  const [counter, setCounter] = useState(0)
-
-  // setTimeout(
-  //   () => setCounter(counter + 1),
-  //   1000
-  // )
-  
-  // console.log("rendering", counter) 
-  const increaseByOne = () => setCounter(counter + 1)
-  const setToZero = () => setCounter(0)
-  const decreaseByOne = () => setCounter(counter - 1)
-
+const Feedback = (props) => {
   return (
     <>
-      <p>Time is running {counter} </p>
-      {/* <button onClick={() => setCounter(counter + 1)}>
-        plus
-      </button> */}
-      {/* <button onClick={increaseByOne}>plus</button> */}
-      <button onClick={decreaseByOne}>minus</button>
-      <button onClick={setToZero}>zero</button>
-
-      <Button onSmash={increaseByOne} text="passing it as a prop"/>
+    <h1>give feedback</h1>
+    <p>
+      <button onClick={props.handleGood}>good</button>
+      <button onClick={props.handleNeutral}>neutral</button>
+      <button onClick={props.handleBad}>bad</button>
+    </p>
     </>
   )
 }
 
-const History = (props) => {
-  console.log("props value is ", props)
-  if (props.allClicks.length === 0) {
+const StatisticLine = ({text, value}) => {
+  return (
+    <div>
+      <p>{text} {value}</p>
+    </div>
+  )
+}
+
+
+const Statistics = ({good, bad, neutral, average, total}) => {
+  if (good || bad || neutral) {
+    console.log((good/total)*100)
+    return (
+      <>
+        {/* <p>good {good}</p>
+        <p>neutral {neutral}</p>
+        <p>bad {bad}</p>
+        <p>all {total}</p>
+        <p>average {average / 3}</p>
+        <p>positive {(good / total) * 100}%</p> */}
+
+        <StatisticLine text="good" value={good}/>
+        <StatisticLine text="bad" value={bad}/>
+        <StatisticLine text="neutral" value={neutral}/>
+        <StatisticLine text="average" value={average/3}/>
+        <StatisticLine text="positive" value={(good/total)*100}/>
+      </>
+    );
+  } else {
+    return <div>No feedback given</div>
+  }
+};
+
+const Anecdotes = ({info, nextAnecdote, prevAnecdote}) => {
+  if (info) {
     return (
       <div>
-        the app is used by pressing the buttons
+        {info}
+        <p>
+          <button onClick={nextAnecdote}>next anecdote</button>
+        </p>
       </div>
     )
+  } else {
+    return (
+    <div>
+      Thank you for reading the anecdotes😉
+      <p>
+        <button onClick={prevAnecdote}>prev anecdote</button>
+      </p>
+    </div>
+    )
+  }
+}
+
+function App() {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [selected, setSelected] = useState(0)
+  const [vote, setVote] = useState(0)
+
+  const handleGood = () => {
+    setGood(good + 1)
+    // console.log(good)
+    setTotal(total + 1)
+    setAverage(average + 1)
+  }
+
+  const handleNeutral = () => {
+    setNeutral(neutral + 1)
+    setTotal(total + 1)
+    setAverage((average + 1))
+  }
+
+  const handleBad = () => {
+    setBad(bad + 1)
+    setTotal(total + 1)
+    setAverage((average + 1))
+  }
+
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
+
+  const points = [1,4,6,3]
+  const copy =[...points]
+  copy[2] += 1
+
+  const handleVote = () => {
+    if (setVote.length)
+    setVote(vote)
+  }
+
+
+  const handleAnecdotes = () => {
+    if (selected != anecdotes.length) {
+      setSelected(selected+1)
+    }
+    else {
+      setSelected(selected-1)
+    }
   }
 
   return (
     <div>
-      button press History: {props.allClicks.join(" ")}
-    </div>
-  )
-}
+      <h1>Hello</h1>
+      <Feedback handleGood={handleGood} handleNeutral={handleNeutral} handleBad={handleBad} />
+      <h2>Statistics</h2>
+      {/* <br />
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
+      <p>all {total}</p>
+      <p>average {average / 3}</p>
+      <p>positive {(good / total) * 100}%</p> */}
+      
+      {/* code refactored */}
+      <Statistics good={good} bad={bad} neutral={neutral} total={total} average={average}/>
+      <br />
 
-
-const App = (props) => {
-  const [clicks, setClicks] = useState({
-    left: 0,
-    right: 0
-  })
-  const [allClicks, setAll] = useState([])
-  const [total, setTotal] = useState(0)
-
-
-  const course = "Half Stack application development"
-  const part1 = "Fundamentals of React"
-  const exercises1 = 10
-  const part2 = "Using props to pass data"
-  const exercises2 = 7
-  const part3 = "State of a component"
-  const exercises3 = 14
-
-  const handleLeftClick = () => {
-    setAll(allClicks.concat("L"))
-    setClicks({...clicks, left: clicks.left + 1})
-    updatedLeft = clicks.left + 1
-    setTotal(updatedLeft + clicks.right)
-  }
-
-  const handleRightClick = () => {
-    setAll(allClicks.concat("R"))
-    setClicks({...clicks, right: clicks.right + 1})
-    updatedRight = clicks.right + 1
-    setTotal(clicks.left + updatedRight)
-  }
-
-  const hello = () => {
-    const handler = () => console.log("Hello world")
-    return handler
-  }
-
-
-  return(
-    <div>
-      <Header course={course}/>
-      <Content />
-      <Total total={exercises1 + exercises2 + exercises3}/>
-      <Hello name="Gideon" age="21" year="2002" />
-      <Counting />
-
+      <h3>The World of Anecdotes</h3>
       <div>
-        <p> The left click is {clicks.left}
-        <button onClick={handleLeftClick}>⬅️</button>
-        </p>
-
-        <p> The right click is {clicks.right}
-        <button onClick={handleRightClick}>➡️</button>
-        </p>
-
-        <p>{allClicks.join(" ")}</p>
-        <p>The number of clicks are {total} </p>
-
-        <History allClicks={allClicks}/>
-        <>
-        <button onClick={hello()}>❓</button>
-        </>
+        <Anecdotes info={anecdotes[selected]} nextAnecdote={handleAnecdotes} prevAnecdote={handleAnecdotes}/>
+        {/* <p>
+        <button onClick={handleAnecdotes}>next anecdote</button>
+        </p> */}
       </div>
     </div>
-    
   )
 }
 
