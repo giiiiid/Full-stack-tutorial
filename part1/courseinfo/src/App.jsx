@@ -47,12 +47,13 @@ const Statistics = ({good, bad, neutral, average, total}) => {
   }
 };
 
-const Anecdotes = ({info, nextAnecdote, prevAnecdote}) => {
+const Anecdotes = ({info, nextAnecdote, prevAnecdote, vote}) => {
   if (info) {
     return (
       <div>
         {info}
         <p>
+        <button onClick={vote}>vote</button>
           <button onClick={nextAnecdote}>next anecdote</button>
         </p>
       </div>
@@ -113,8 +114,10 @@ function App() {
   copy[2] += 1
 
   const handleVote = () => {
-    if (setVote.length)
-    setVote(vote)
+    const copy =[...points]
+    copy[0]++
+    setVote(copy)
+    console.log(vote)
   }
 
 
@@ -146,7 +149,7 @@ function App() {
 
       <h3>The World of Anecdotes</h3>
       <div>
-        <Anecdotes info={anecdotes[selected]} nextAnecdote={handleAnecdotes} prevAnecdote={handleAnecdotes}/>
+        <Anecdotes info={anecdotes[selected]} nextAnecdote={handleAnecdotes} prevAnecdote={handleAnecdotes} vote={handleVote}/>
         {/* <p>
         <button onClick={handleAnecdotes}>next anecdote</button>
         </p> */}
